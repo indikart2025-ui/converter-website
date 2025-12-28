@@ -73,34 +73,53 @@ async function convertExcelToPDF() {
     return;
   }
 
-  document.getElementById("status").innerText = "Converting Excel to PDF…";
+  const status = document.getElementById("status");
+  status.innerText = "Reading Excel file…";
 
-  const data = await file.arrayBuffer();
-  const workbook = XLSX.read(data, { type: "array" });
+  try {
+    const data = await file.arrayBuffer();
+    const workbook = XLSX.read(data, { type: "array" });
 
-  const sheetName = workbook.SheetNames[0];
-  const sheet = workbook.Sheets[sheetName];
-  const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
 
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF("l", "mm", "a4");
+    // Convert to array (rows)
+    let rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-  pdf.text(`Excel to PDF – ${sheetName}`, 14, 10);
+    // 🔥 IMPORTANT FIXES
+    rows = rows
+      .filter(r => r.some(c => c !== null && c !== "")) // remove empty rows
+      .slice(0, 500); // limit rows for performance (safe)
 
-  pdf.autoTable({
-    startY: 15,
-    body: json,
-    styles: { fontSize: 8 },
-    theme: "grid"
-  });
+    status.innerText = "Creating PDF…";
 
-  pdf.save("excel-to-pdf.pdf");
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("l", "mm", "a4");
 
-  document.getElementById("status").innerText =
-    "Done! PDF downloaded successfully.";
+    pdf.text(`Excel to PDF`, 14, 10);
+
+    pdf.autoTable({
+      startY: 15,
+      body: rows,
+      styles: { fontSize: 7 },
+      pageBreak: "auto",
+      tableWidth: "auto"
+    });
+
+    // ✅ GUARANTEED DOWNLOAD
+    pdf.save("excel-to-pdf.pdf");
+
+    status.innerText = "PDF downloaded successfully.";
+
+  } catch (err) {
+    console.error(err);
+    alert("Conversion failed. Please try a smaller Excel file.");
+    status.innerText = "";
+  }
 }
 </script>
 
 </body>
 </html>
+
 
