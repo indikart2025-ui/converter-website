@@ -18,20 +18,23 @@ body {
   font-weight: bold;
   color: #ff3c00;
 }
-
 .hero {
-  padding: 80px 20px;
-  background: #f8f9fa;
+  padding: 90px 20px;
+  background: linear-gradient(135deg, #ff3c3c, #e60023);
+  color: #fff;
 }
 
 .hero h1 {
   font-size: 42px;
+  color: #fff;
 }
 
 .hero p {
   font-size: 18px;
   margin: 20px 0;
+  color: #ffeaea;
 }
+
 
 .btn {
   background: #ff3c00;
