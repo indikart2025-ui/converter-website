@@ -14,7 +14,7 @@
   <a href="#convert" class="btn small">Convert Now</a>
 </header>
 
-<!-- HERO SECTION (SAME AS JPG TO PDF) -->
+<!-- HERO -->
 <section class="hero">
   <h1>Convert PDF to JPG Online</h1>
   <p>
@@ -24,7 +24,7 @@
   <a href="#convert" class="btn">Convert PDF to JPG</a>
 </section>
 
-<!-- FEATURES (SAME STRUCTURE) -->
+<!-- FEATURES -->
 <section class="features">
   <div class="feature">
     ⚡ <h3>Fast Conversion</h3>
@@ -32,7 +32,7 @@
   </div>
   <div class="feature">
     🔒 <h3>Secure</h3>
-    <p>Your files never leave your device.</p>
+    <p>Files are processed in your browser.</p>
   </div>
   <div class="feature">
     💯 <h3>100% Free</h3>
@@ -40,30 +40,52 @@
   </div>
 </section>
 
-<!-- CONVERTER CTA (SAME LOOK, SAME PAGE) -->
+<!-- CONVERT -->
 <section id="convert" class="convert">
   <h2>Ready to Convert?</h2>
-  <p>Click below to upload your PDF file.</p>
+  <p>Select your PDF file below.</p>
 
-  <!-- IMPORTANT: SAME PAGE FORM -->
-  <form
-    action="/convert-pdf-to-jpg"
-    method="post"
-    enctype="multipart/form-data">
-
-    <input type="file" name="pdf" accept=".pdf" required>
-    <br><br>
-
-    <button type="submit" class="btn">
-      Upload PDF & Download JPG
-    </button>
-  </form>
+  <input type="file" id="pdfInput" accept="application/pdf">
+  <br><br>
+  <button class="btn" onclick="convertPDF()">Upload PDF & Download JPG</button>
 </section>
 
 <!-- FOOTER -->
 <footer class="footer">
   © 2025 MyFileTools – Free PDF to JPG Converter
 </footer>
+
+<!-- PDF.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+async function convertPDF() {
+  const file = document.getElementById("pdfInput").files[0];
+  if (!file) return alert("Please select a PDF file");
+
+  const pdfData = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale: 2 });
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/jpeg");
+    link.download = `page-${i}.jpg`;
+    link.click();
+  }
+}
+</script>
 
 </body>
 </html>
