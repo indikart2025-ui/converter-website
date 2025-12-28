@@ -65,41 +65,72 @@
 
 <script>
 async function convertDocx() {
-  const file = document.getElementById("docInput").files[0];
+  const input = document.getElementById("docInput");
+  const file = input.files[0];
+
   if (!file) {
     alert("Please select a DOCX file");
     return;
   }
 
-  // Hidden container to render DOCX
+  // Hidden render container
   const container = document.createElement("div");
-  container.style.width = "800px";
-  container.style.background = "#fff";
-  container.style.padding = "20px";
-  container.style.position = "absolute";
+  container.style.width = "794px"; // A4 width
+  container.style.background = "#ffffff";
+  container.style.padding = "30px";
+  container.style.position = "fixed";
   container.style.left = "-9999px";
   document.body.appendChild(container);
 
-  // Render DOCX
-  const arrayBuffer = await file.arrayBuffer();
-  await docx.renderAsync(arrayBuffer, container);
+  try {
+    // Render DOCX
+    const arrayBuffer = await file.arrayBuffer();
+    await window.docx.renderAsync(arrayBuffer, container);
 
-  // Capture to canvas
-  const canvas = await html2canvas(container, { scale: 2, backgroundColor: "#ffffff" });
-  const imgData = canvas.toDataURL("image/png");
+    // Capture HTML → Canvas
+    const canvas = await html2canvas(container, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff"
+    });
 
-  // Create PDF
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const imgData = canvas.toDataURL("image/png");
 
-  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-  pdf.save("word-to-pdf.pdf");
+    // Create PDF
+    const pdf = new window.jspdf.jsPDF("p", "mm", "a4");
 
-  document.body.removeChild(container);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    const imgWidth = pdfWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pdfHeight;
+
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pdfHeight;
+    }
+
+    // 🔥 FINAL DOWNLOAD (guaranteed)
+    pdf.save("docx-to-pdf.pdf");
+
+  } catch (err) {
+    alert("Conversion failed. Please try another DOCX file.");
+    console.error(err);
+  } finally {
+    document.body.removeChild(container);
+  }
 }
 </script>
 
+
 </body>
 </html>
+
