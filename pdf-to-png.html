@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF to PNG Converter – Free Online</title>
+  <meta name="description" content="Convert PDF to PNG images online for free. Secure, fast and professional PDF to PNG converter.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">MyFileTools</div>
+  <div class="header-buttons">
+    <a href="index.html" class="btn small outline">Home</a>
+    <a href="#convert" class="btn small">Convert Now</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Convert PDF to PNG Online</h1>
+  <p>
+    Convert each page of your PDF into high-quality PNG images.  
+    100% free, no signup required.
+  </p>
+  <a href="#convert" class="btn">Convert PDF to PNG</a>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="feature">
+    ⚡ <h3>High Quality</h3>
+    <p>Sharp PNG images for every page.</p>
+  </div>
+  <div class="feature">
+    🔒 <h3>Secure</h3>
+    <p>Files processed in your browser.</p>
+  </div>
+  <div class="feature">
+    💯 <h3>Free</h3>
+    <p>No limits, no registration.</p>
+  </div>
+</section>
+
+<!-- CONVERT -->
+<section id="convert" class="convert">
+  <h2>Ready to Convert?</h2>
+  <p>Select your PDF file below.</p>
+
+  <input type="file" id="pdfInput" accept="application/pdf">
+  <br><br>
+  <button class="btn" onclick="convertPdfToPng()">Upload PDF & Download PNG</button>
+
+  <div id="status" style="margin-top:15px;color:#555"></div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  © 2025 MyFileTools – Free PDF to PNG Converter
+</footer>
+
+<!-- PDF.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+async function convertPdfToPng() {
+  const file = document.getElementById("pdfInput").files[0];
+  if (!file) {
+    alert("Please select a PDF file");
+    return;
+  }
+
+  document.getElementById("status").innerText = "Processing pages...";
+
+  const pdfData = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    const page = await pdf.getPage(pageNum);
+    const viewport = page.getViewport({ scale: 2 });
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    canvas.toBlob(blob => {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `page-${pageNum}.png`;
+      link.click();
+    }, "image/png");
+  }
+
+  document.getElementById("status").innerText =
+    "Conversion completed. PNG files downloaded.";
+}
+</script>
+
+</body>
+</html>
