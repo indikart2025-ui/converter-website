@@ -1,231 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>JPG to PDF Converter – Free Online</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Convert JPG images to PDF online for free. Fast, secure and professional JPG to PDF converter.">
-
-<style>
-* {
-  box-sizing: border-box;
-  font-family: "Segoe UI", Arial, sans-serif;
-}
-
-body {
-  margin: 0;
-  background: #f5f7fb;
-  color: #333;
-}
-
-/* HEADER */
-header {
-  background: #e5322d;
-  color: white;
-  padding: 16px 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  font-size: 22px;
-  font-weight: 700;
-}
-
-header nav a {
-  color: white;
-  text-decoration: none;
-  margin-left: 20px;
-  font-size: 14px;
-}
-
-/* HERO */
-.hero {
-  background: linear-gradient(135deg, #e5322d, #ff6b6b);
-  color: white;
-  text-align: center;
-  padding: 70px 20px 110px;
-}
-
-.hero h1 {
-  font-size: 38px;
-  margin-bottom: 10px;
-}
-
-.hero p {
-  font-size: 18px;
-  opacity: 0.95;
-}
-
-/* CONVERTER CARD */
-.converter {
-  max-width: 460px;
-  margin: -70px auto 40px;
-  background: white;
-  padding: 35px;
-  border-radius: 16px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-  text-align: center;
-}
-
-.upload-box {
-  border: 2px dashed #cfd3dc;
-  padding: 45px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  color: #555;
-  transition: 0.3s;
-}
-
-.upload-box:hover {
-  border-color: #e5322d;
-  color: #e5322d;
-  background: #fff7f7;
-}
-
-.upload-box input {
-  display: none;
-}
-
-.upload-text {
-  font-size: 16px;
-  margin-top: 8px;
-}
-
-.convert-btn {
-  background: #e5322d;
-  color: white;
-  border: none;
-  padding: 14px 30px;
-  font-size: 16px;
-  border-radius: 8px;
-  margin-top: 25px;
-  cursor: pointer;
-}
-
-.convert-btn:hover {
-  background: #c92824;
-}
-
-/* FEATURES */
-.features {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  padding: 40px 20px;
-  flex-wrap: wrap;
-}
-
-.feature {
-  background: white;
-  width: 260px;
-  padding: 25px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.feature h3 {
-  margin: 12px 0 5px;
-}
-
-/* FOOTER */
-footer {
-  background: #222;
-  color: #ccc;
-  text-align: center;
-  padding: 15px;
-  font-size: 14px;
-}
-
-/* MOBILE */
-@media (max-width: 600px) {
-  .hero h1 {
-    font-size: 26px;
-  }
-  header {
-    padding: 14px 20px;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <title>JPG to PDF Converter – Free Online</title>
+  <meta name="description" content="Convert JPG images to PDF online for free. Fast, secure and easy to use.">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <!-- HEADER -->
-<header>
+<header class="header">
   <div class="logo">MyFileTools</div>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="#">All Tools</a>
-  </nav>
+  <a href="#convert" class="btn small">Convert Now</a>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-  <h1>JPG to PDF Converter</h1>
-  <p>Convert your JPG images to PDF instantly. Secure, fast & free.</p>
-</section>
-
-<!-- CONVERTER -->
-<section class="converter">
-  <label class="upload-box">
-    📁
-    <div class="upload-text"><strong>Select JPG Image</strong><br>or drop file here</div>
-    <input type="file" id="fileInput" accept="image/jpeg,image/jpg">
-  </label>
-
-  <button class="convert-btn" onclick="convertToPDF()">Convert to PDF</button>
+  <h1>Convert JPG to PDF Online</h1>
+  <p>
+    Fast, secure and 100% free JPG to PDF converter.  
+    No signup required.
+  </p>
+  <a href="#convert" class="btn">Convert JPG to PDF</a>
 </section>
 
 <!-- FEATURES -->
 <section class="features">
   <div class="feature">
-    ⚡
-    <h3>Fast Conversion</h3>
-    <p>Convert JPG to PDF in seconds.</p>
+    ⚡ <h3>Fast Conversion</h3>
+    <p>Convert images to PDF in seconds.</p>
   </div>
-
   <div class="feature">
-    🔒
-    <h3>Secure</h3>
-    <p>Files stay on your device.</p>
+    🔒 <h3>Secure</h3>
+    <p>Files are processed in your browser.</p>
   </div>
-
   <div class="feature">
-    💯
-    <h3>100% Free</h3>
-    <p>No signup, no limits.</p>
+    💯 <h3>100% Free</h3>
+    <p>No limits, no registration.</p>
   </div>
 </section>
 
+<!-- CONVERT -->
+<section id="convert" class="convert">
+  <h2>Ready to Convert?</h2>
+  <p>Select JPG images below.</p>
+
+  <input type="file" id="jpgInput" accept="image/*" multiple>
+  <br><br>
+  <button class="btn" onclick="convertJPG()">Upload JPG & Download PDF</button>
+</section>
+
 <!-- FOOTER -->
-<footer>
+<footer class="footer">
   © 2025 MyFileTools – Free JPG to PDF Converter
 </footer>
 
-<!-- jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+<!-- PDF-LIB -->
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script>
-function convertToPDF() {
-  const file = document.getElementById("fileInput").files[0];
-  if (!file) {
-    alert("Please select a JPG image");
+async function convertJPG() {
+  const files = document.getElementById("jpgInput").files;
+  if (!files.length) {
+    alert("Please select JPG images");
     return;
   }
 
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-    pdf.addImage(e.target.result, "JPEG", 10, 10, 180, 160);
-    pdf.save("jpg-to-pdf.pdf");
-  };
-  reader.readAsDataURL(file);
+  const pdfDoc = await PDFLib.PDFDocument.create();
+
+  for (let file of files) {
+    const bytes = await file.arrayBuffer();
+    const img = file.type.includes("png")
+      ? await pdfDoc.embedPng(bytes)
+      : await pdfDoc.embedJpg(bytes);
+
+    const page = pdfDoc.addPage([img.width, img.height]);
+    page.drawImage(img, {
+      x: 0,
+      y: 0,
+      width: img.width,
+      height: img.height
+    });
+  }
+
+  const pdfBytes = await pdfDoc.save();
+  const blob = new Blob([pdfBytes], { type: "application/pdf" });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "images.pdf";
+  link.click();
 }
 </script>
 
 </body>
 </html>
+
