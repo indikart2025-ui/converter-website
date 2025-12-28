@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF to Excel Converter – Free Online</title>
+  <meta name="description" content="Convert PDF to Excel online for free. Extract tables from PDF and download as Excel (CSV).">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">MyFileTools</div>
+  <div class="header-buttons">
+    <a href="index.html" class="btn small outline">Home</a>
+    <a href="#convert" class="btn small">Convert Now</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Convert PDF to Excel Online</h1>
+  <p>
+    Extract tables from PDF and download as Excel (CSV).  
+    100% free, secure and fast.
+  </p>
+  <a href="#convert" class="btn">Convert PDF to Excel</a>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="feature">
+    ⚡ <h3>Fast</h3>
+    <p>Instant table extraction.</p>
+  </div>
+  <div class="feature">
+    🔒 <h3>Secure</h3>
+    <p>Files processed in your browser.</p>
+  </div>
+  <div class="feature">
+    💯 <h3>Free</h3>
+    <p>No limits, no signup.</p>
+  </div>
+</section>
+
+<!-- CONVERT -->
+<section id="convert" class="convert">
+  <h2>Ready to Convert?</h2>
+  <p>Select your PDF file below.</p>
+
+  <input type="file" id="pdfInput" accept="application/pdf">
+  <br><br>
+  <button class="btn" onclick="convertPdfToExcel()">Upload PDF & Download Excel</button>
+  <div id="status" style="margin-top:12px;color:#555"></div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  © 2025 MyFileTools – Free PDF to Excel Converter
+</footer>
+
+<!-- PDF.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+async function convertPdfToExcel() {
+  const file = document.getElementById("pdfInput").files[0];
+  if (!file) {
+    alert("Please select a PDF file");
+    return;
+  }
+
+  document.getElementById("status").innerText = "Extracting data…";
+
+  const data = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data }).promise;
+
+  let csv = "";
+
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const page = await pdf.getPage(p);
+    const text = await page.getTextContent();
+
+    let row = [];
+    let lastY = null;
+
+    text.items.forEach(item => {
+      const y = item.transform[5];
+      if (lastY === null || Math.abs(y - lastY) < 5) {
+        row.push(item.str);
+      } else {
+        csv += row.join(",") + "\n";
+        row = [item.str];
+      }
+      lastY = y;
+    });
+    if (row.length) csv += row.join(",") + "\n\n";
+  }
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "pdf-to-excel.csv";
+  link.click();
+
+  document.getElementById("status").innerText =
+    "Done! CSV downloaded (open it in Excel).";
+}
+</script>
+
+</body>
+</html>
