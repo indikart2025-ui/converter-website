@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Word to PDF Converter – Free Online</title>
-  <meta name="description" content="Convert Word (DOCX) to PDF online for free. Fast, secure and easy to use.">
+  <meta name="description" content="Convert Word (DOCX) to PDF online for free. Accurate and secure.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,8 +21,8 @@
 <section class="hero">
   <h1>Convert Word to PDF Online</h1>
   <p>
-    Convert DOCX files to PDF instantly.  
-    100% free & secure.
+    Professional & accurate Word to PDF conversion.  
+    100% free, no signup required.
   </p>
   <a href="#convert" class="btn">Convert Word to PDF</a>
 </section>
@@ -30,27 +30,49 @@
 <!-- FEATURES -->
 <section class="features">
   <div class="feature">
-    ⚡ <h3>Fast Conversion</h3>
-    <p>Convert Word to PDF in seconds.</p>
+    ⚡ <h3>Accurate</h3>
+    <p>Best quality PDF output.</p>
   </div>
   <div class="feature">
     🔒 <h3>Secure</h3>
-    <p>Files processed in your browser.</p>
+    <p>Your file stays private.</p>
   </div>
   <div class="feature">
-    💯 <h3>100% Free</h3>
+    💯 <h3>Free</h3>
     <p>No limits, no registration.</p>
   </div>
 </section>
 
 <!-- CONVERT -->
 <section id="convert" class="convert">
-  <h2>Ready to Convert?</h2>
-  <p>Select your Word (.docx) file below.</p>
+  <h2>How to Convert Word to PDF</h2>
 
-  <input type="file" id="docInput" accept=".docx">
-  <br><br>
-  <button class="btn" onclick="convertDocx()">Upload Word & Download PDF</button>
+  <div class="steps">
+    <div class="step">
+      <span>1</span>
+      <p>Open Google Docs</p>
+    </div>
+    <div class="step">
+      <span>2</span>
+      <p>Upload your DOCX file</p>
+    </div>
+    <div class="step">
+      <span>3</span>
+      <p>Download as PDF</p>
+    </div>
+  </div>
+
+  <a
+    href="https://docs.google.com/document/"
+    target="_blank"
+    class="btn big">
+    Open Google Docs
+  </a>
+
+  <p class="note">
+    ✔ This method ensures correct fonts, tables & layout  
+    ✔ Used by professionals worldwide
+  </p>
 </section>
 
 <!-- FOOTER -->
@@ -58,79 +80,5 @@
   © 2025 MyFileTools – Free Word to PDF Converter
 </footer>
 
-<!-- LIBRARIES -->
-<script src="https://unpkg.com/docx-preview@0.3.3/dist/docx-preview.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-async function convertDocx() {
-  const input = document.getElementById("docInput");
-  const file = input.files[0];
-
-  if (!file) {
-    alert("Please select a DOCX file");
-    return;
-  }
-
-  // Hidden render container
-  const container = document.createElement("div");
-  container.style.width = "794px"; // A4 width
-  container.style.background = "#ffffff";
-  container.style.padding = "30px";
-  container.style.position = "fixed";
-  container.style.left = "-9999px";
-  document.body.appendChild(container);
-
-  try {
-    // Render DOCX
-    const arrayBuffer = await file.arrayBuffer();
-    await window.docx.renderAsync(arrayBuffer, container);
-
-    // Capture HTML → Canvas
-    const canvas = await html2canvas(container, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#ffffff"
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-
-    // Create PDF
-    const pdf = new window.jspdf.jsPDF("p", "mm", "a4");
-
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    let heightLeft = imgHeight;
-    let position = 0;
-
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pdfHeight;
-
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pdfHeight;
-    }
-
-    // 🔥 FINAL DOWNLOAD (guaranteed)
-    pdf.save("docx-to-pdf.pdf");
-
-  } catch (err) {
-    alert("Conversion failed. Please try another DOCX file.");
-    console.error(err);
-  } finally {
-    document.body.removeChild(container);
-  }
-}
-</script>
-
-
 </body>
 </html>
-
