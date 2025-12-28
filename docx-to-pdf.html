@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Word to PDF Converter – Free Online</title>
+  <meta name="description" content="Convert Word (DOCX) to PDF online for free. Fast, secure and easy to use.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">MyFileTools</div>
+  <div class="header-buttons">
+    <a href="index.html" class="btn small outline">Home</a>
+    <a href="#convert" class="btn small">Convert Now</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Convert Word to PDF Online</h1>
+  <p>
+    Convert DOCX files to PDF instantly.  
+    100% free & secure.
+  </p>
+  <a href="#convert" class="btn">Convert Word to PDF</a>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="feature">
+    ⚡ <h3>Fast Conversion</h3>
+    <p>Convert Word to PDF in seconds.</p>
+  </div>
+  <div class="feature">
+    🔒 <h3>Secure</h3>
+    <p>Files processed in your browser.</p>
+  </div>
+  <div class="feature">
+    💯 <h3>100% Free</h3>
+    <p>No limits, no registration.</p>
+  </div>
+</section>
+
+<!-- CONVERT -->
+<section id="convert" class="convert">
+  <h2>Ready to Convert?</h2>
+  <p>Select your Word (.docx) file below.</p>
+
+  <input type="file" id="docInput" accept=".docx">
+  <br><br>
+  <button class="btn" onclick="convertDocx()">Upload Word & Download PDF</button>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  © 2025 MyFileTools – Free Word to PDF Converter
+</footer>
+
+<!-- LIBRARIES -->
+<script src="https://unpkg.com/docx-preview@0.3.3/dist/docx-preview.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+async function convertDocx() {
+  const file = document.getElementById("docInput").files[0];
+  if (!file) {
+    alert("Please select a DOCX file");
+    return;
+  }
+
+  // Hidden container to render DOCX
+  const container = document.createElement("div");
+  container.style.width = "800px";
+  container.style.background = "#fff";
+  container.style.padding = "20px";
+  container.style.position = "absolute";
+  container.style.left = "-9999px";
+  document.body.appendChild(container);
+
+  // Render DOCX
+  const arrayBuffer = await file.arrayBuffer();
+  await docx.renderAsync(arrayBuffer, container);
+
+  // Capture to canvas
+  const canvas = await html2canvas(container, { scale: 2, backgroundColor: "#ffffff" });
+  const imgData = canvas.toDataURL("image/png");
+
+  // Create PDF
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  pdf.save("word-to-pdf.pdf");
+
+  document.body.removeChild(container);
+}
+</script>
+
+</body>
+</html>
